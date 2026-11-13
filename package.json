@@ -1,6 +1,6 @@
 {
   "name": "@turbodt/svg-to-pdf",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Browser-first SVG to PDF conversion helpers backed by WebAssembly.",
   "license": "AGPL-3.0-or-later",
   "type": "module",

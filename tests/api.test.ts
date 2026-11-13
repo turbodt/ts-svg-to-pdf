@@ -24,6 +24,28 @@ describe("@turbodt/svg-to-pdf", () => {
         expect(pdf.length).toBeGreaterThan(100);
     });
 
+    it("converts the supported SVG shapes to PDF bytes", async () => {
+        const converter = await createSvgToPdfConverter({ wasmBytes: await readFile(wasmPath) });
+        const svg = [
+            '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">',
+            '<line x1="0" y1="0" x2="10" y2="10" stroke="black"/>',
+            '<polyline points="10,10 20,20 30,10" fill="none" stroke="black"/>',
+            '<polygon points="10,30 20,40 30,30" fill="none" stroke="black"/>',
+            '<circle cx="50" cy="50" r="10" fill="none" stroke="black"/>',
+            '<ellipse cx="20" cy="20" rx="10" ry="5" fill="none" stroke="black"/>',
+            '<rect x="10" y="70" width="40" height="20" rx="5" ry="5" fill="none" stroke="black"/>',
+            "</svg>"
+        ].join("");
+        const pdf = await converter.convertToPdf(svg, {
+            containerWidth: 2400,
+            containerHeight: 3400,
+            pdfSize: "a4-portrait"
+        });
+
+        expect(new TextDecoder().decode(pdf.slice(0, 8))).toBe("%PDF-1.4");
+        expect(pdf.length).toBeGreaterThan(100);
+    });
+
     it("returns a 1-based SVG page and all SVG pages", async () => {
         const converter = await createSvgToPdfConverter({ wasmBytes: await readFile(wasmPath) });
         const svg = await readFile(resolve(cRepo, "examples/input/2025-07-22.svg"));
